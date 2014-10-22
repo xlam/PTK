@@ -101,7 +101,6 @@ public class Converter {
             
             fw.write(out);
             
-            //System.out.println(out.trim() + "\t" + line + " - [" + colon1 + ";" + colon2 + "] - [X" + X + ":Y" + Y + "]");
             System.out.println(out.trim() + "\t\tline: " + line);
         }
         
