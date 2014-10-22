@@ -69,16 +69,16 @@ public class Converter {
         String[] split;
         String line, out;
         String X,Y;
-        int count = 0;
-        int lineNumber = 0;
+        int polygonsCount = 0;
+        int linesCount = 0;
                 
         while (fr.ready()) {
             out = "";
             line = fr.readLine();
-            lineNumber++;
+            linesCount++;
 
             if (3 != countDelimeters(line)) {
-                System.err.println("ERROR: Wrong format at line " + lineNumber + ": \"" + line + "\"");
+                System.err.println("ERROR: Wrong format at line " + linesCount + ": \"" + line + "\"");
                 continue;
             }
             
@@ -87,13 +87,13 @@ public class Converter {
             X = split[2];
             Y = split[3];
             
-            if (!X.isEmpty()) out = "X"+X+zeros;
-            if (!Y.isEmpty()) out = out + "Y"+Y+zeros;
+            if (!X.isEmpty()) out = out + "X" + X + zeros;
+            if (!Y.isEmpty()) out = out + "Y" + Y + zeros;
             
             if (!split[0].isEmpty()) {
-                if (count > 0) fw.write("G37*\n");
+                if (polygonsCount > 0) fw.write("G37*\n");
                 fw.write("G36*\n");
-                count++;
+                polygonsCount++;
                 out = out + "D02*\n";
             } else if (!out.isEmpty()) {
                 out = out + "D01*\n";
@@ -105,7 +105,7 @@ public class Converter {
             System.out.println(out.trim() + "\t\tline: " + line);
         }
         
-        if (count > 0) {
+        if (polygonsCount > 0) {
             fw.write("G37*\n");
         }
 
@@ -113,6 +113,9 @@ public class Converter {
         
         fr.close();
         fw.close();
+        
+        System.out.println("\nPolygons count: " + polygonsCount);
+        System.out.println("Lines processed: " + linesCount);
     }
 
     public int countDelimeters(String str) {
