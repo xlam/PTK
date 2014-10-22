@@ -33,7 +33,7 @@ public class Converter {
      */
     public Converter(String[] args) throws IOException {
         if (args.length == 0) {
-            System.out.println("Укажите файл таблицы");
+            System.out.println("Provide filename");
             System.exit(0);
         }
         String filename = args[0];
