@@ -50,4 +50,10 @@ public class ConverterTest {
         assertEquals(1, c.countDelimeters(";"));
         assertEquals(0, c.countDelimeters(""));
     }
+    
+    @Test
+    public void testParseLine() {
+        String[] arr = {"А", "1", "25000", "50000"};
+        assertArrayEquals(arr, c.parseLine("А;1;25000;50000"));
+    }
 }

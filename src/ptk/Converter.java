@@ -75,6 +75,8 @@ public class Converter {
             out = "";
             line = fr.readLine();
 
+            if (3 != countDelimeters(line)) System.err.println("ERROR: Wrong line format: \"" + line + "\"");
+            
             Name = line.substring(0, line.indexOf(delim));
             colon2 = line.lastIndexOf(delim);
             colon1 = line.lastIndexOf(delim, colon2-1);
@@ -112,6 +114,11 @@ public class Converter {
         int count = 0;
         for (char c: str.toCharArray()) if (c == ';') count++;
         return count;
+    }
+
+    public String[] parseLine(String str) {
+        String[] arr = {"А", "1", "25000", "50000"};
+        return arr;
     }
 
     
