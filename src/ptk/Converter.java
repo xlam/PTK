@@ -20,6 +20,9 @@ public class Converter {
      */
     private String delim = ";";
     
+    /**
+     * Decimal zeros. We use only integer values.
+     */
     private String zeros = "000";
     
     /**
@@ -93,7 +96,7 @@ public class Converter {
             
             fw.write(out);
             
-            //System.out.println(out.trim() + "\t" + line + " - [" + colon1 + ";" + colon2 + "] - [X" + X + ":Y" + Y + "]");
+            System.out.println(out.trim() + "\t" + line + " - [" + colon1 + ";" + colon2 + "] - [X" + X + ":Y" + Y + "]");
         }
         
         if (count > 0) {
