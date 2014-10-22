@@ -19,15 +19,19 @@ import static org.junit.Assert.*;
  */
 public class ConverterTest {
     
+    private static Converter c;
+    
     public ConverterTest() {
     }
     
     @BeforeClass
     public static void setUpClass() {
+        c = new Converter();
     }
     
     @AfterClass
     public static void tearDownClass() {
+        c = null;
     }
     
     @Before
@@ -40,7 +44,10 @@ public class ConverterTest {
 
     
     @Test
-    public void testParse() {
-        assertTrue(true);
+    public void testCountDelimeters() {
+        assertEquals(3, c.countDelimeters("А;1;25000;50000"));
+        assertEquals(2, c.countDelimeters("А;1;25000"));
+        assertEquals(1, c.countDelimeters(";"));
+        assertEquals(0, c.countDelimeters(""));
     }
 }

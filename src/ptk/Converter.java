@@ -107,5 +107,12 @@ public class Converter {
         fr.close();
         fw.close();
     }
+
+    public int countDelimeters(String str) {
+        int count = 0;
+        for (char c: str.toCharArray()) if (c == ';') count++;
+        return count;
+    }
+
     
 }
