@@ -33,7 +33,7 @@ public class Converter {
      */
     public Converter(String[] args) throws IOException {
         if (args.length == 0) {
-            System.out.println("Укажите имя файла координат");
+            System.out.println("Укажите файл таблицы");
             System.exit(0);
         }
         String filename = args[0];
@@ -75,7 +75,6 @@ public class Converter {
             out = "";
             line = fr.readLine();
 
-            // TODO: если в строке нет разделителей возможен сбой!
             Name = line.substring(0, line.indexOf(delim));
             colon2 = line.lastIndexOf(delim);
             colon1 = line.lastIndexOf(delim, colon2-1);
