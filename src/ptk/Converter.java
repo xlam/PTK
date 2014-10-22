@@ -66,27 +66,31 @@ public class Converter {
      */
     public void convert() throws IOException {
           
+        String[] split;
         String line, out;
-        String X,Y, Name;
-        int colon1, colon2;
+        String X,Y;
         int count = 0;
+        int lineNumber = 0;
                 
         while (fr.ready()) {
             out = "";
             line = fr.readLine();
+            lineNumber++;
 
-            if (3 != countDelimeters(line)) System.err.println("ERROR: Wrong line format: \"" + line + "\"");
+            if (3 != countDelimeters(line)) {
+                System.err.println("ERROR: Wrong format at line " + lineNumber + ": \"" + line + "\"");
+                continue;
+            }
             
-            Name = line.substring(0, line.indexOf(delim));
-            colon2 = line.lastIndexOf(delim);
-            colon1 = line.lastIndexOf(delim, colon2-1);
-            X = line.substring(colon1+1, colon2);
-            Y = line.substring(colon2+1);
-        
+            split = parseLine(line);
+            
+            X = split[2];
+            Y = split[3];
+            
             if (!X.isEmpty()) out = "X"+X+zeros;
             if (!Y.isEmpty()) out = out + "Y"+Y+zeros;
             
-            if (!Name.isEmpty()) {
+            if (!split[0].isEmpty()) {
                 if (count > 0) fw.write("G37*\n");
                 fw.write("G36*\n");
                 count++;
@@ -97,7 +101,8 @@ public class Converter {
             
             fw.write(out);
             
-            System.out.println(out.trim() + "\t" + line + " - [" + colon1 + ";" + colon2 + "] - [X" + X + ":Y" + Y + "]");
+            //System.out.println(out.trim() + "\t" + line + " - [" + colon1 + ";" + colon2 + "] - [X" + X + ":Y" + Y + "]");
+            System.out.println(out.trim() + "\t\tline: " + line);
         }
         
         if (count > 0) {
@@ -112,12 +117,12 @@ public class Converter {
 
     public int countDelimeters(String str) {
         int count = 0;
-        for (char c: str.toCharArray()) if (c == ';') count++;
+        for (char c: str.toCharArray()) if (c == delim.charAt(0)) count++;
         return count;
     }
 
     public String[] parseLine(String str) {
-        String[] arr = {"А", "1", "25000", "50000"};
+        String[] arr = str.split(delim, 4);
         return arr;
     }
 

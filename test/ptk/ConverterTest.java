@@ -53,7 +53,16 @@ public class ConverterTest {
     
     @Test
     public void testParseLine() {
-        String[] arr = {"А", "1", "25000", "50000"};
+        String[] arr;
+        arr = new String[] {"А", "1", "25000", "50000"};
         assertArrayEquals(arr, c.parseLine("А;1;25000;50000"));
+        arr = new String[] {"", "1", "25000", "50000"};
+        assertArrayEquals(arr, c.parseLine(";1;25000;50000"));
+        arr = new String[] {"", "1", "", "50000"};
+        assertArrayEquals(arr, c.parseLine(";1;;50000"));
+        arr = new String[] {"", "1", "25000", ""};
+        assertArrayEquals(arr, c.parseLine(";1;25000;"));
+        arr = new String[] {"", "", "", ""};
+        assertArrayEquals(arr, c.parseLine(";;;"));
     }
 }
