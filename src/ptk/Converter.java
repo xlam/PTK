@@ -26,11 +26,6 @@ public class Converter {
     private String zeros = "000";
     
     /**
-     * Flag indicating that we currently in polygon mode
-     */
-    private boolean polygonFlag = false;
-    
-    /**
      * Polygons count
      */
     private int polygonsCount = 0;
@@ -76,15 +71,12 @@ public class Converter {
      */
     public void convert() throws IOException {
           
-        String[] split;
         String line, out;
-        String X,Y;
         int linesCount = 0;
         int errorLinesCount = 0;
                 
         polygonsCount = 0;
         while (fr.ready()) {
-            out = "";
             line = fr.readLine();
             linesCount++;
 
@@ -94,30 +86,12 @@ public class Converter {
                 continue;
             }
             
-            split = parseLine(line);
-            
-            X = split[2];
-            Y = split[3];
-            
-            if (!X.isEmpty()) out += "X" + X + zeros;
-            if (!Y.isEmpty()) out += "Y" + Y + zeros;
-            
-            if (!split[0].isEmpty()) {
-                if (polygonsCount > 0) fw.write("G37*\n");
-                fw.write("G36*\n");
-                polygonsCount++;
-                out += "D02*\n";
-            } else if (!out.isEmpty()) {
-                out += "D01*\n";
-            }
-            
+            out = createTockens(parseLine(line));
             fw.write(out);
-            
             System.out.println(out.trim() + "\t\tline: " + line);
         }
         
         if (polygonsCount > 0) fw.write("G37*\n");
-
         fw.write("M02*");
         
         fr.close();
@@ -128,18 +102,37 @@ public class Converter {
         System.out.println("Error lines: " + errorLinesCount);
     }
 
+    /**
+     * Counts delimeters in CSV separated line
+     * @param str CSV line
+     * @return Number of delimeters in line
+     */
     public int countDelimeters(String str) {
         int count = 0;
         for (char c: str.toCharArray()) if (c == delim.charAt(0)) count++;
         return count;
     }
 
+    /**
+     * Parses line and splits it by delimiter into array
+     * @param str CSV text line
+     * @return Array of strings:
+     *  [0] - polygon name
+     *  [1] - point number
+     *  [2] - X coordinate
+     *  [3] - Y coordinate
+     */
     public String[] parseLine(String str) {
         String[] arr = str.split(delim, 4);
         return arr;
     }
 
-    public String CreateTockens(String[] arr) {
+    /**
+     * Creates Gerber tockens from array data
+     * @param arr Array containing Gerber data
+     * @return String of Gerber tockens
+     */
+    public String createTockens(String[] arr) {
         String X = "", Y = "", result = "";
         if (!arr[2].isEmpty()) X = "X" + arr[2] + zeros;
         if (!arr[3].isEmpty()) Y = "Y" + arr[3] + zeros;

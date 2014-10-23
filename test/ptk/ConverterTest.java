@@ -75,18 +75,18 @@ public class ConverterTest {
         String[] arr;
         // this must be the first test assert
         arr = new String[] {"А", "1", "5", "3"};
-        assertEquals("G36*\nX5000Y3000D02*\n", c.CreateTockens(arr));
+        assertEquals("G36*\nX5000Y3000D02*\n", c.createTockens(arr));
         // this must be the second test assert
         arr = new String[] {"А", "1", "5", "3"};
-        assertEquals("G37*\nG36*\nX5000Y3000D02*\n", c.CreateTockens(arr));
+        assertEquals("G37*\nG36*\nX5000Y3000D02*\n", c.createTockens(arr));
         arr = new String[] {"", "1", "5", "3"};
-        assertEquals("X5000Y3000D01*\n", c.CreateTockens(arr));
+        assertEquals("X5000Y3000D01*\n", c.createTockens(arr));
         arr = new String[] {"", "1", "5", ""};
-        assertEquals("X5000D01*\n", c.CreateTockens(arr));
+        assertEquals("X5000D01*\n", c.createTockens(arr));
         arr = new String[] {"", "1", "", "3"};
-        assertEquals("Y3000D01*\n", c.CreateTockens(arr));
+        assertEquals("Y3000D01*\n", c.createTockens(arr));
         arr = new String[] {"", "1", "", ""};
-        assertEquals("D01*\n", c.CreateTockens(arr));
+        assertEquals("D01*\n", c.createTockens(arr));
     }
     
 
