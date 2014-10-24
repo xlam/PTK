@@ -47,7 +47,7 @@ public class Converter {
         this.fw = new FileWriter(coordsFile.getName() + ".gbr"); 
     
         fw.write(
-            "G04 PTK 0.1a*\n" +
+            "G04 PTK 0.2a*\n" +
             "%TF.FileFunction,Copper,L1,Top,Signal*%\n" +
             "%MOMM*%\n" +
             "%FSLAX53Y53*%\n" +
@@ -104,8 +104,8 @@ public class Converter {
 
     /**
      * Counts delimeters in CSV separated line
-     * @param str CSV line
-     * @return Number of delimeters in line
+     * @param str String CSV line
+     * @return int Number of delimeters in line
      */
     public int countDelimeters(String str) {
         int count = 0;
@@ -115,8 +115,8 @@ public class Converter {
 
     /**
      * Parses line and splits it by delimiter into array
-     * @param str CSV text line
-     * @return Array of strings:
+     * @param str String CSV text line
+     * @return array Array of strings:
      *  [0] - polygon name
      *  [1] - point number
      *  [2] - X coordinate
@@ -129,8 +129,8 @@ public class Converter {
 
     /**
      * Creates Gerber tockens from array data
-     * @param arr Array containing Gerber data
-     * @return String of Gerber tockens
+     * @param arr array Array containing Gerber data
+     * @return String String of Gerber tockens
      */
     public String createTockens(String[] arr) {
         String X = "", Y = "", result = "";
