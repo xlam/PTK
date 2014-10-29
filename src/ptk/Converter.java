@@ -31,6 +31,22 @@ public class Converter {
     private int polygonsCount = 0;
     
     /**
+     * Total lines processed
+     */
+    private int linesCount = 0;
+    
+    /**
+     * Error lines encountered
+     */
+    private int errorLinesCount = 0;
+
+    /**
+     * Empty constructor for creating test instances
+     * 
+     */
+    public Converter () {}
+    
+    /**
      * Main constructor
      * 
      * @param args Command line args
@@ -41,27 +57,28 @@ public class Converter {
             System.out.println("Provide filename");
             System.exit(0);
         }
-        String filename = args[0];
-        File coordsFile = new File(filename);
-        this.fr = new BufferedReader(new FileReader(coordsFile));
-        this.fw = new FileWriter(coordsFile.getName() + ".gbr"); 
-    
+        createStreams(args[0]); // args[0] = input file name
+        writeHeader();
+    }
+
+    private void writeHeader() throws IOException {
         fw.write(
             "G04 PTK 0.2a*\n" +
             "%TF.FileFunction,Copper,L1,Top,Signal*%\n" +
             "%MOMM*%\n" +
-            "%FSLAX53Y53*%\n" +
+            "%FSLAX43Y43*%\n" +
             "G75*\n" +
             "G01*\n" +
             "%LPD*%\n"
         );
     }
+
+    private void createStreams(String filename) throws IOException {
+        File coordsFile = new File(filename);
+        this.fr = new BufferedReader(new FileReader(coordsFile));
+        this.fw = new FileWriter(coordsFile.getName() + ".gbr");
+    }
    
-    /**
-     * Empty constructor for creating test instances
-     * 
-     */
-    public Converter () {}
     
     /**
      * Converts coordinates data into Gerber RS-274X and
@@ -72,19 +89,12 @@ public class Converter {
     public void convert() throws IOException {
           
         String line, out;
-        int linesCount = 0;
-        int errorLinesCount = 0;
                 
-        polygonsCount = 0;
         while (fr.ready()) {
             line = fr.readLine();
             linesCount++;
 
-            if (3 != countDelimeters(line)) {
-                System.err.println("ERROR: Wrong format at line " + linesCount + ": \"" + line + "\"");
-                errorLinesCount++;
-                continue;
-            }
+            if (hasErrors(line)) continue;
             
             out = createTockens(parseLine(line));
             fw.write(out);
@@ -102,6 +112,20 @@ public class Converter {
         System.out.println("Error lines: " + errorLinesCount);
     }
 
+    /**
+     * Checks if line has errors and therefore can not be processed
+     * @param line string line to check for errors
+     * @return true if line has errors
+     */
+    public boolean hasErrors(String line) {
+        if (3 != countDelimeters(line)) {
+                System.err.println("ERROR: Wrong format at line " + linesCount + ": \"" + line + "\"");
+                errorLinesCount++;
+                return true;
+        }
+        return false;
+    }
+    
     /**
      * Counts delimeters in CSV separated line
      * @param str String CSV line
