@@ -18,7 +18,7 @@ public class Converter {
     /**
      * CSV delimeter
      */
-    private String delim = ";";
+    private String delimeter = ";";
     
     /**
      * Decimal zeros. We use only integer values.
@@ -133,7 +133,7 @@ public class Converter {
      */
     public int countDelimeters(String str) {
         int count = 0;
-        for (char c: str.toCharArray()) if (c == delim.charAt(0)) count++;
+        for (char c: str.toCharArray()) if (c == delimeter.charAt(0)) count++;
         return count;
     }
 
@@ -147,7 +147,7 @@ public class Converter {
      *  [3] - Y coordinate
      */
     public String[] parseLine(String str) {
-        String[] arr = str.split(delim, 4);
+        String[] arr = str.split(delimeter, 4);
         return arr;
     }
 
