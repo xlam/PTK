@@ -51,9 +51,6 @@ public class PointTest {
         assertEquals("", p.toString());
         p = new Point();
         assertEquals("", p.toString());
-        p.setXY("5", "10");
-        assertEquals("5000", p.getXGerber());
-        assertEquals("10000", p.getYGerber());
     }
     
     @Test

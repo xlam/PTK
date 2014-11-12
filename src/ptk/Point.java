@@ -13,48 +13,49 @@ public class Point {
 
     private static String zeros = "";
     
-    private Integer x;
-    private Integer y;
+    private String raw_x;
+    private String raw_y;
+    private String x;
+    private String y;
     
     public Point() {
+        update("", "");
     };
     
     public Point(String x, String y) {
-        setXY(x, y);
+        update(x, y);
     }
     
     public static void setZeros(String zeros) {
         Point.zeros = zeros;
     }
     
-    public Point setXY(String x, String y) {
-        if (x.length() > 0 ) this.x = Integer.decode(x);
-        if (y.length() > 0 ) this.y = Integer.decode(y);
-        return this;
+    private void update(String x, String y) {
+        raw_x = x;
+        raw_y = y;
+        this.x = raw_x.isEmpty() ? "" : "X" + raw_x + zeros;
+        this.y = raw_y.isEmpty() ? "" : "Y" + raw_y + zeros;
     }
     
-    public Integer getX() {
+    public String getX() {
         return x;
     }
     
-    public Integer getY() {
+    public String getY() {
         return y;
     }
-    
-    public String getXGerber() {
-        return new String(x + zeros);
+
+    public String getRawX() {
+        return raw_x;
     }
     
-    public String getYGerber() {
-        return new String(y + zeros);
+    public String getRawY() {
+        return raw_y;
     }
     
     @Override
     public String toString() {
-        String _x = "", _y = "";
-        if (x != null) _x = "X"+x+zeros;
-        if (y != null) _y = "Y"+y+zeros;
-        return _x+_y;
+        return x + y;
     }
 
     @Override

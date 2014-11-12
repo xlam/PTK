@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  *
@@ -14,21 +15,13 @@ public class Converter {
 
     private FileWriter fw;
     private BufferedReader fr;
+
+    private ArrayList<Polygon> polygons = new ArrayList();
     
     /**
      * CSV delimeter
      */
     private String delimeter = ";";
-    
-    /**
-     * Decimal zeros. We use only integer values.
-     */
-    private String zeros = "000";
-    
-    /**
-     * Polygons count
-     */
-    private int polygonsCount = 0;
     
     /**
      * Total lines processed
@@ -59,11 +52,52 @@ public class Converter {
         }
         createStreams(args[0]); // args[0] = input file name
         writeHeader();
+        Point.setZeros("000"); // формат чисел - X43Y43. Используется только целая часть.
     }
 
+    /**
+     * Первый полигон будет создан только тогда, когда встретится
+     * строка в которой присутствует имя полигона. Поэтому надо следить
+     * за корректностью CSV файла.
+     * 
+     * @throws IOException 
+     */
+    public void readCSV() throws IOException {
+        String[] data;
+        String line;
+        Polygon p = new Polygon();
+        while (fr.ready()) {
+            line = fr.readLine();
+            linesCount++;
+            if (hasErrors(line)) continue;
+            data = parseLine(line);
+            if (!data[0].isEmpty()) {
+                //System.out.println("Adding polygon " + (polygons.size()+1) + ": " + data[0]);
+                p = new Polygon();
+                polygons.add(p);
+            }
+            p.addPoint(new Point(data[2], data[3]));
+        }
+        fr.close();
+    }
+    
+    public void writeGerber() throws IOException {
+        for (Polygon p: polygons) {
+            fw.write(p.toGerber());
+        }
+        fw.write("M02*");
+        fw.close();
+    }
+    
+    public void printStats() {
+        System.out.println("\nLines processed: " + linesCount);
+        System.out.println("Polygons: " + polygons.size());
+        System.out.println("Error lines: " + errorLinesCount);
+    }
+    
     private void writeHeader() throws IOException {
         fw.write(
-            "G04 PTK 0.2a*\n" +
+            "G04 PTK 0.3a*\n" +
             "%TF.FileFunction,Copper,L1,Top,Signal*%\n" +
             "%MOMM*%\n" +
             "%FSLAX43Y43*%\n" +
@@ -79,39 +113,6 @@ public class Converter {
         this.fw = new FileWriter(coordsFile.getName() + ".gbr");
     }
    
-    
-    /**
-     * Converts coordinates data into Gerber RS-274X and
-     * writes it to gerber output file
-     * 
-     * @throws IOException
-     */
-    public void convert() throws IOException {
-          
-        String line, out;
-                
-        while (fr.ready()) {
-            line = fr.readLine();
-            linesCount++;
-
-            if (hasErrors(line)) continue;
-            
-            out = createTockens(parseLine(line));
-            fw.write(out);
-            System.out.println(out.trim() + "\t\tline: " + line);
-        }
-        
-        if (polygonsCount > 0) fw.write("G37*\n");
-        fw.write("M02*");
-        
-        fr.close();
-        fw.close();
-        
-        System.out.println("\nLines processed: " + linesCount);
-        System.out.println("Polygons: " + polygonsCount);
-        System.out.println("Error lines: " + errorLinesCount);
-    }
-
     /**
      * Checks if line has errors and therefore can not be processed
      * @param line string line to check for errors
@@ -151,24 +152,4 @@ public class Converter {
         return arr;
     }
 
-    /**
-     * Creates Gerber tockens from array data
-     * @param arr array Array containing Gerber data
-     * @return String String of Gerber tockens
-     */
-    public String createTockens(String[] arr) {
-        String X = "", Y = "", result = "";
-        if (!arr[2].isEmpty()) X = "X" + arr[2] + zeros;
-        if (!arr[3].isEmpty()) Y = "Y" + arr[3] + zeros;
-        if (!arr[0].isEmpty()) {
-            if (polygonsCount++ > 0) result = "G37*\n";
-            result += "G36*\n"+X+Y+"D02*\n";
-        }
-        else {
-            result = X+Y+"D01*\n";
-        }
-        return result;
-    }
-
-    
 }
