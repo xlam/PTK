@@ -15,9 +15,6 @@ import java.io.IOException;
 public class PTK {
     public static void main(String[] args) throws IOException {
         Converter c = new Converter(args);
-        //c.convert();
-        c.readCSV();
-        c.writeGerber();
-        c.printStats();
+        c.convert();
     }
 }

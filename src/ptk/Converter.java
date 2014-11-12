@@ -51,10 +51,15 @@ public class Converter {
             System.exit(0);
         }
         createStreams(args[0]); // args[0] = input file name
-        writeHeader();
         Point.setZeros("000"); // формат чисел - X43Y43. Используется только целая часть.
     }
 
+    public void convert() throws IOException{
+        readCSV();
+        writeGerber();
+        printStats();
+    }
+    
     /**
      * Первый полигон будет создан только тогда, когда встретится
      * строка в которой присутствует имя полигона. Поэтому надо следить
@@ -70,9 +75,10 @@ public class Converter {
             line = fr.readLine();
             linesCount++;
             if (hasErrors(line)) continue;
-            data = parseLine(line);
+            data = line.split(delimeter, 4);
             if (!data[0].isEmpty()) {
                 //System.out.println("Adding polygon " + (polygons.size()+1) + ": " + data[0]);
+                p.removeLast();
                 p = new Polygon();
                 polygons.add(p);
             }
@@ -82,6 +88,7 @@ public class Converter {
     }
     
     public void writeGerber() throws IOException {
+        writeHeader();
         for (Polygon p: polygons) {
             fw.write(p.toGerber());
         }
@@ -97,7 +104,7 @@ public class Converter {
     
     private void writeHeader() throws IOException {
         fw.write(
-            "G04 PTK 0.3a*\n" +
+            "G04 PTK 0.3.1*\n" +
             "%TF.FileFunction,Copper,L1,Top,Signal*%\n" +
             "%MOMM*%\n" +
             "%FSLAX43Y43*%\n" +

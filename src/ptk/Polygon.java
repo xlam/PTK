@@ -34,6 +34,10 @@ public class Polygon {
         return points.size();
     }
     
+    public void removeLast() {
+        if (points.size() > 0) points.remove(points.size()-1);
+    }
+    
     public String toGerber() {
         String result = GRB_G36;
         Point[] p = points.toArray(new Point[points.size()]);
