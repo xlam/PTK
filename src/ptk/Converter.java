@@ -68,23 +68,29 @@ public class Converter {
      * @throws IOException 
      */
     public void readCSV() throws IOException {
-        String[] data;
-        String line;
         Polygon p = new Polygon();
         while (fr.ready()) {
-            line = fr.readLine();
+            String line = fr.readLine();
             linesCount++;
-            if (hasErrors(line)) continue;
-            data = line.split(delimeter, 4);
-            if (!data[0].isEmpty()) {
-                //System.out.println("Adding polygon " + (polygons.size()+1) + ": " + data[0]);
-                p.removeLast();
-                p = new Polygon();
-                polygons.add(p);
-            }
-            p.addPoint(new Point(data[2], data[3]));
+            if (hasNoErrors(line)) p = addPoint(p, line);
         }
         fr.close();
+    }
+    
+    private Polygon addPoint(Polygon p, String line) {
+        String[] data = line.split(delimeter, 4);
+        if (!data[0].isEmpty()) {
+            // полигон содержит только информацию о вершинах (точках),
+            // в то время как в таблицах координат содержится информация о
+            // перемещениях (действиях) инструмента. Перемещений всегда больше
+            // на одно чем вершин, поэтому мы удаляем последнюю точку (которая на
+            // самом деле совпадает с первой вершиной) из полигона.
+            p.removeLast();
+            p = new Polygon();
+            polygons.add(p);
+        }
+        p.addPoint(new Point(data[2], data[3]));
+        return p;
     }
     
     public void writeGerber() throws IOException {
@@ -123,15 +129,15 @@ public class Converter {
     /**
      * Checks if line has errors and therefore can not be processed
      * @param line string line to check for errors
-     * @return true if line has errors
+     * @return true if line has no errors
      */
-    public boolean hasErrors(String line) {
+    public boolean hasNoErrors(String line) {
         if (3 != countDelimeters(line)) {
                 System.err.println("ERROR: Wrong format at line " + linesCount + ": \"" + line + "\"");
                 errorLinesCount++;
-                return true;
+                return false;
         }
-        return false;
+        return true;
     }
     
     /**
