@@ -11,7 +11,7 @@ package ptk;
  */
 public class Point {
 
-    private static String zeros = "";
+    private static String trailingZeros = "";
     
     private String raw_x;
     private String raw_y;
@@ -26,15 +26,15 @@ public class Point {
         update(x, y);
     }
     
-    public static void setZeros(String zeros) {
-        Point.zeros = zeros;
+    public static void setTrailingZeros(String zeros) {
+        Point.trailingZeros = zeros;
     }
     
     private void update(String x, String y) {
         raw_x = x;
         raw_y = y;
-        this.x = raw_x.isEmpty() ? "" : "X" + raw_x + zeros;
-        this.y = raw_y.isEmpty() ? "" : "Y" + raw_y + zeros;
+        this.x = raw_x.isEmpty() ? "" : "X" + raw_x + trailingZeros;
+        this.y = raw_y.isEmpty() ? "" : "Y" + raw_y + trailingZeros;
     }
     
     public String getX() {

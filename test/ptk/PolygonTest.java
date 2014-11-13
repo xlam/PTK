@@ -19,12 +19,15 @@ import static org.junit.Assert.*;
  */
 public class PolygonTest {
     
+    private Polygon     p;
+    private String      expected;
+    
     public PolygonTest() {
     }
     
     @BeforeClass
     public static void setUpClass() {
-        Point.setZeros("000");
+        Point.setTrailingZeros("000");
     }
     
     @AfterClass
@@ -33,21 +36,19 @@ public class PolygonTest {
     
     @Before
     public void setUp() {
+        prepareTestData();
     }
-    
-    @After
-    public void tearDown() {
-    }
-    
-    @Test
-    public void testPolygon01() {
-        Polygon p = new Polygon();
-        p.addPoint(new Point("5", "5"));
-        p.addPoint(new Point("5", "10"));
-        p.addPoint(new Point("10", "10"));
-        p.addPoint(new Point("10", "5"));
-        assertEquals(4, p.countPoints());
-        String expected = ""
+
+    private void prepareTestData() {
+        p = new Polygon();
+        Point[] points = {
+            new Point("5",  "5"),
+            new Point("5",  "10"),
+            new Point("10", "10"),
+            new Point("10", "5")
+        };
+        addPointsTo(p, points);
+        expected = ""
                 + "G36*\n"
                 + "X5000Y5000D02*\n"
                 + "Y10000D01*\n"
@@ -55,15 +56,32 @@ public class PolygonTest {
                 + "Y5000D01*\n"
                 + "X5000D01*\n"
                 + "G37*\n";
+    }
+    
+    @After
+    public void tearDown() {
+    }
+    
+    private void addPointsTo(Polygon p, Point[] points) {
+        for (Point point: points)
+            p.addPoint(point);
+    }
+    
+    @Test
+    public void testPolygonGerberStringGenerated() {
+        assertEquals(4, p.countPoints());
         assertEquals(expected, p.toGerber());
     }
     
     @Test
-    public void testPolygon02() {
-        Polygon p = new Polygon();
-        p.addPoint(new Point("5", "5"));
-        p.addPoint(new Point("5", "10"));
-        p.addPoint(new Point("5", "10"));
+    public void testPolygonPointsCounted() {
+        p.addPoint(new Point("0", "0"));
+        assertEquals(5, p.countPoints());
+    }
+    
+    @Test
+    public void testPolygonLastPointRemoved() {
+        p.removeLast();
         assertEquals(3, p.countPoints());
     }
 }

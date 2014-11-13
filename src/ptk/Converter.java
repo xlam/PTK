@@ -12,80 +12,59 @@ import java.util.ArrayList;
  * @author Sergey
  */
 public class Converter {
-
-    private FileWriter fw;
-    private BufferedReader fr;
-
-    private ArrayList<Polygon> polygons = new ArrayList();
     
-    /**
-     * CSV delimeter
-     */
-    private String delimeter = ";";
-    
-    /**
-     * Total lines processed
-     */
-    private int linesCount = 0;
-    
-    /**
-     * Error lines encountered
-     */
-    private int errorLinesCount = 0;
+    private String csvFileName;
+    private ArrayList<String> csvData   = new ArrayList<>();
+    private ArrayList<Polygon> polygons = new ArrayList<>();
+    private String delimeter            = ";";
+    private int linesCount              = 0;
+    private int errorLinesCount         = 0;
 
-    /**
-     * Empty constructor for creating test instances
-     * 
-     */
+    private String gerberHeader =
+        "G04 PTK " + PTK.VERSION + "*\n" +
+        "%TF.FileFunction,Copper,L1,Top,Signal*%\n" +
+        "%MOMM*%\n" +
+        "%FSLAX43Y43*%\n" +
+        "G75*\n" +
+        "G01*\n" +
+        "%LPD*%\n";
+    
+
     public Converter () {}
     
-    /**
-     * Main constructor
-     * 
-     * @param args Command line args
-     * @throws IOException
-     */
-    public Converter(String[] args) throws IOException {
-        if (args.length == 0) {
-            System.out.println("Provide filename");
-            System.exit(0);
-        }
-        createStreams(args[0]); // args[0] = input file name
-        Point.setZeros("000"); // формат чисел - X43Y43. Используется только целая часть.
+    public Converter(String csvFileName) {
+        this.csvFileName = csvFileName;
     }
 
-    public void convert() throws IOException{
-        readCSV();
+    public void convert() throws IOException {
+        readCsvIntoArrayList();
+        convertCsvDataToPolygons();
         writeGerber();
         printStats();
     }
     
-    /**
-     * Первый полигон будет создан только тогда, когда встретится
-     * строка в которой присутствует имя полигона. Поэтому надо следить
-     * за корректностью CSV файла.
-     * 
-     * @throws IOException 
-     */
-    public void readCSV() throws IOException {
-        Polygon p = new Polygon();
-        while (fr.ready()) {
-            String line = fr.readLine();
+    public void readCsvIntoArrayList() throws IOException {
+        BufferedReader r = new BufferedReader(new FileReader(csvFileName));
+        csvData.clear();
+        while (r.ready()) {
+            csvData.add(r.readLine());
             linesCount++;
-            if (hasNoErrors(line)) p = addPoint(p, line);
         }
-        fr.close();
+        r.close();
     }
     
-    private Polygon addPoint(Polygon p, String line) {
+    public void convertCsvDataToPolygons() {
+        polygons.clear();
+        Polygon p = new Polygon();
+        for (String line: csvData)
+            if (hasNoErrors(line)) p = addPointFromLineTo(p, line);
+        p.removeLast();
+    }
+    
+    private Polygon addPointFromLineTo(Polygon p, String line) {
         String[] data = line.split(delimeter, 4);
         if (!data[0].isEmpty()) {
-            // полигон содержит только информацию о вершинах (точках),
-            // в то время как в таблицах координат содержится информация о
-            // перемещениях (действиях) инструмента. Перемещений всегда больше
-            // на одно чем вершин, поэтому мы удаляем последнюю точку (которая на
-            // самом деле совпадает с первой вершиной) из полигона.
-            p.removeLast();
+            p.removeLast();             // последняя точка совпадает с первой
             p = new Polygon();
             polygons.add(p);
         }
@@ -93,13 +72,30 @@ public class Converter {
         return p;
     }
     
+    public void setCsvData(ArrayList<String> csvData) {
+        this.csvData = csvData;
+    }
+    
+    public int getPolygonsCount() {
+        return polygons.size();
+    }
+    
+    public String toGerber() {
+        String result = "";
+        for (Polygon p: polygons)
+            result += p.toGerber();
+        return result;
+    }
+    
     public void writeGerber() throws IOException {
-        writeHeader();
+        File gerberFile = new File(csvFileName + ".gbr");
+        FileWriter w = new FileWriter(gerberFile);
+        w.write(gerberHeader);
         for (Polygon p: polygons) {
-            fw.write(p.toGerber());
+            w.write(p.toGerber());
         }
-        fw.write("M02*");
-        fw.close();
+        w.write("M02*");
+        w.close();
     }
     
     public void printStats() {
@@ -107,27 +103,9 @@ public class Converter {
         System.out.println("Polygons: " + polygons.size());
         System.out.println("Error lines: " + errorLinesCount);
     }
-    
-    private void writeHeader() throws IOException {
-        fw.write(
-            "G04 PTK 0.3.1*\n" +
-            "%TF.FileFunction,Copper,L1,Top,Signal*%\n" +
-            "%MOMM*%\n" +
-            "%FSLAX43Y43*%\n" +
-            "G75*\n" +
-            "G01*\n" +
-            "%LPD*%\n"
-        );
-    }
-
-    private void createStreams(String filename) throws IOException {
-        File coordsFile = new File(filename);
-        this.fr = new BufferedReader(new FileReader(coordsFile));
-        this.fw = new FileWriter(coordsFile.getName() + ".gbr");
-    }
    
     /**
-     * Checks if line has errors and therefore can not be processed
+     * Checks if line has no errors and therefore can be processed
      * @param line string line to check for errors
      * @return true if line has no errors
      */
@@ -149,20 +127,6 @@ public class Converter {
         int count = 0;
         for (char c: str.toCharArray()) if (c == delimeter.charAt(0)) count++;
         return count;
-    }
-
-    /**
-     * Parses line and splits it by delimiter into array
-     * @param str String CSV text line
-     * @return array Array of strings:
-     *  [0] - polygon name
-     *  [1] - point number
-     *  [2] - X coordinate
-     *  [3] - Y coordinate
-     */
-    public String[] parseLine(String str) {
-        String[] arr = str.split(delimeter, 4);
-        return arr;
     }
 
 }

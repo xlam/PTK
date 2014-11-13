@@ -1,20 +1,23 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Преобразователь таблиц координат (ПТК)
+ * @author Sergey
  */
 
 package ptk;
 
 import java.io.IOException;
 
-/**
- * Преобразователь таблиц координат (ПТК)
- * @author Sergey
- */
 public class PTK {
+    
+    public static final String VERSION = "0.3.4-dev";
+    
     public static void main(String[] args) throws IOException {
-        Converter c = new Converter(args);
+        if (args.length == 0) {
+            System.out.println("Provide filename");
+            System.exit(0);
+        }
+        Point.setTrailingZeros("000"); // формат чисел - X43Y43. Используется только целая часть.
+        Converter c = new Converter(args[0]);
         c.convert();
     }
 }

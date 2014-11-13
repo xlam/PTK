@@ -24,7 +24,7 @@ public class PointTest {
     
     @BeforeClass
     public static void setUpClass() {
-        Point.setZeros("000");
+        Point.setTrailingZeros("000");
     }
     
     @AfterClass
@@ -40,7 +40,7 @@ public class PointTest {
     }
 
     @Test
-    public void testPoint01() {
+    public void testPointPointsCreatedAndChecked() {
         Point p = new Point("123", "456");
         assertEquals("X123000Y456000", p.toString());
         p = new Point("", "456");
@@ -54,7 +54,7 @@ public class PointTest {
     }
     
     @Test
-    public void testPoint02() {
+    public void testPointEqualityChecked() {
         Point p1 = new Point("5", "5");
         Point p2 = new Point("5", "5");
         Point p3 = new Point("5", "10");
