@@ -24,7 +24,7 @@ public class PointTest {
     
     @BeforeClass
     public static void setUpClass() {
-        Point.setTrailingZeros("000");
+        Gerber.setNumberFormat(4, 3);
     }
     
     @AfterClass
@@ -42,15 +42,15 @@ public class PointTest {
     @Test
     public void testPointPointsCreatedAndChecked() {
         Point p = new Point("123", "456");
-        assertEquals("X123000Y456000", p.toString());
+        assertEquals("X123000Y456000", p.toGerber());
         p = new Point("", "456");
-        assertEquals("Y456000", p.toString());
+        assertEquals("Y456000", p.toGerber());
         p = new Point("123", "");
-        assertEquals("X123000", p.toString());
+        assertEquals("X123000", p.toGerber());
         p = new Point("", "");
-        assertEquals("", p.toString());
+        assertEquals("", p.toGerber());
         p = new Point();
-        assertEquals("", p.toString());
+        assertEquals("", p.toGerber());
     }
     
     @Test

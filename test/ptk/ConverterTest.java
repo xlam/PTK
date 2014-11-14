@@ -31,7 +31,7 @@ public class ConverterTest {
     
     @BeforeClass
     public static void setUpClass() {
-        Point.setTrailingZeros("000");
+        Gerber.setNumberFormat(4, 3);
     }
     
     @AfterClass
@@ -104,7 +104,7 @@ public class ConverterTest {
     }
     
     @Test
-    public void testConverterCsvDataConvertedToPolygons() {
+    public void testConverterCsvDataConvertedToGerber() {
         c.convertCsvDataToPolygons();
         assertEquals(expected, c.toGerber());
     }

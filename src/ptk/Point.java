@@ -10,12 +10,10 @@ package ptk;
  * @author Admin
  */
 public class Point {
-
-    private static String trailingZeros = "";
     
-    private String raw_x;
+    private String raw_x;   // CSV
     private String raw_y;
-    private String x;
+    private String x;       // Gerber formatted
     private String y;
     
     public Point() {
@@ -26,15 +24,11 @@ public class Point {
         update(x, y);
     }
     
-    public static void setTrailingZeros(String zeros) {
-        Point.trailingZeros = zeros;
-    }
-    
     private void update(String x, String y) {
         raw_x = x;
         raw_y = y;
-        this.x = raw_x.isEmpty() ? "" : "X" + raw_x + trailingZeros;
-        this.y = raw_y.isEmpty() ? "" : "Y" + raw_y + trailingZeros;
+        this.x = raw_x.isEmpty() ? "" : "X" + Gerber.formatNumber(raw_x);
+        this.y = raw_y.isEmpty() ? "" : "Y" + Gerber.formatNumber(raw_y);
     }
     
     public String getX() {
@@ -53,8 +47,7 @@ public class Point {
         return raw_y;
     }
     
-    @Override
-    public String toString() {
+    public String toGerber() {
         return x + y;
     }
 

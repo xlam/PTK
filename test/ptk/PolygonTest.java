@@ -27,7 +27,7 @@ public class PolygonTest {
     
     @BeforeClass
     public static void setUpClass() {
-        Point.setTrailingZeros("000");
+        Gerber.setNumberFormat(4, 3);
     }
     
     @AfterClass

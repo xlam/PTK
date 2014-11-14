@@ -24,7 +24,7 @@ public class Converter {
         "G04 PTK " + PTK.VERSION + "*\n" +
         "%TF.FileFunction,Copper,L1,Top,Signal*%\n" +
         "%MOMM*%\n" +
-        "%FSLAX43Y43*%\n" +
+        "%FSLA" + Gerber.getNumberFormatString() + "*%\n" +
         "G75*\n" +
         "G01*\n" +
         "%LPD*%\n";
@@ -37,15 +37,15 @@ public class Converter {
     }
 
     public void convert() throws IOException {
-        readCsvIntoArrayList();
+        readCsvFileIntoArrayList();
         convertCsvDataToPolygons();
         writeGerber();
         printStats();
     }
     
-    public void readCsvIntoArrayList() throws IOException {
-        BufferedReader r = new BufferedReader(new FileReader(csvFileName));
+    public void readCsvFileIntoArrayList() throws IOException {
         csvData.clear();
+        BufferedReader r = new BufferedReader(new FileReader(csvFileName));
         while (r.ready()) {
             csvData.add(r.readLine());
             linesCount++;
@@ -56,20 +56,17 @@ public class Converter {
     public void convertCsvDataToPolygons() {
         polygons.clear();
         Polygon p = new Polygon();
-        for (String line: csvData)
-            if (hasNoErrors(line)) p = addPointFromLineTo(p, line);
-        p.removeLast();
-    }
-    
-    private Polygon addPointFromLineTo(Polygon p, String line) {
-        String[] data = line.split(delimeter, 4);
-        if (!data[0].isEmpty()) {
-            p.removeLast();             // последняя точка совпадает с первой
-            p = new Polygon();
-            polygons.add(p);
+        for (String line: csvData) {
+            if (lineHasErrors(line)) continue;
+            String[] data = line.split(delimeter, 4);
+            if (!data[0].isEmpty()) {
+                p.removeLast();             // последняя точка совпадает с первой
+                p = new Polygon();
+                polygons.add(p);
+            }
+            p.addPoint(new Point(data[2], data[3]));
         }
-        p.addPoint(new Point(data[2], data[3]));
-        return p;
+        p.removeLast();
     }
     
     public void setCsvData(ArrayList<String> csvData) {
@@ -91,9 +88,8 @@ public class Converter {
         File gerberFile = new File(csvFileName + ".gbr");
         FileWriter w = new FileWriter(gerberFile);
         w.write(gerberHeader);
-        for (Polygon p: polygons) {
+        for (Polygon p: polygons)
             w.write(p.toGerber());
-        }
         w.write("M02*");
         w.close();
     }
@@ -104,25 +100,15 @@ public class Converter {
         System.out.println("Error lines: " + errorLinesCount);
     }
    
-    /**
-     * Checks if line has no errors and therefore can be processed
-     * @param line string line to check for errors
-     * @return true if line has no errors
-     */
-    public boolean hasNoErrors(String line) {
+    public boolean lineHasErrors(String line) {
         if (3 != countDelimeters(line)) {
-                System.err.println("ERROR: Wrong format at line " + linesCount + ": \"" + line + "\"");
-                errorLinesCount++;
-                return false;
+            System.err.println("ERROR: Wrong format at line " + linesCount + ": \"" + line + "\"");
+            errorLinesCount++;
+            return true;
         }
-        return true;
+        return false;
     }
     
-    /**
-     * Counts delimeters in CSV separated line
-     * @param str String CSV line
-     * @return int Number of delimeters in line
-     */
     public int countDelimeters(String str) {
         int count = 0;
         for (char c: str.toCharArray()) if (c == delimeter.charAt(0)) count++;

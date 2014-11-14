@@ -5,9 +5,10 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-    ConverterTest.class,
+    GerberTest.class,
     PointTest.class,
     PolygonTest.class,
+    ConverterTest.class,
 })
 public class AllTests {
 

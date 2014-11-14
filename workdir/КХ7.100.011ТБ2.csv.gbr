@@ -1,4 +1,4 @@
-G04 PTK 0.3.3-dev*
+G04 PTK 0.3.4-dev*
 %TF.FileFunction,Copper,L1,Top,Signal*%
 %MOMM*%
 %FSLAX43Y43*%
@@ -1150,6 +1150,5 @@ Y12000D01*
 X308000D01*
 Y5000D01*
 X293000D01*
-Y5000D01*
 G37*
 M02*

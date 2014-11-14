@@ -47,7 +47,7 @@ public class Polygon {
                 if (!(p[i].getY()).equals(p[i-1].getY())) result += p[i].getY();
                 result += GRB_D01;
             } else {
-                result += p[i] + GRB_D02;
+                result += p[i].toGerber() + GRB_D02;
             }
         }
 
