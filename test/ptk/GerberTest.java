@@ -19,6 +19,8 @@ import static org.junit.Assert.*;
  */
 public class GerberTest {
     
+    private Gerber gerber = Gerber.getInstance();
+    
     public GerberTest() {
     }
     
@@ -40,20 +42,20 @@ public class GerberTest {
 
     @Test
     public void testGerberSetAndGetNumberFormat() {
-        Gerber.setNumberFormat(4, 3);
-        assertEquals("X43Y43", Gerber.getNumberFormatString());
+        gerber.setNumberFormat(4, 3);
+        assertEquals("X43Y43", gerber.getNumberFormatString());
     }
     
     @Test
     public void testGerberGetTrailZeros() {
-        Gerber.setNumberFormat(4, 4);
-        assertEquals("0000", Gerber.getTrailZeros());
+        gerber.setNumberFormat(4, 4);
+        assertEquals("0000", gerber.getTrailZeros());
     }
     
     @Test
     public void testGerberNumberFormatted() {
-        Gerber.setNumberFormat(4, 2);
-        assertEquals("500", Gerber.formatNumber("5"));
+        gerber.setNumberFormat(4, 2);
+        assertEquals("500", gerber.formatNumber("5"));
     }
     
 }

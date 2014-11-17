@@ -12,29 +12,39 @@ package ptk;
  */
 public class Gerber {
 
-    private static int leadDigits  = 4;
-    private static int trailDigits = 4;
+    private static Gerber instance = null;
     
-    private static final String[] zeros = {"", "0", "00", "000", "0000", "00000", "000000", "0000000"};
+    private int leadDigits  = 4;
+    private int trailDigits = 4;
     
-    public static void setNumberFormat(int leadDigits, int trailDigits) {
-        Gerber.leadDigits  = leadDigits;
-        Gerber.trailDigits = trailDigits;
+    private final String[] zeros = {"", "0", "00", "000", "0000", "00000", "000000", "0000000"};
+    
+    private Gerber() {}
+    
+    public static Gerber getInstance() {
+        if (null == instance)
+            instance = new Gerber();
+        return instance;
     }
     
-    public static String getNumberFormatString() {
+    public void setNumberFormat(int leadDigits, int trailDigits) {
+        this.leadDigits  = leadDigits;
+        this.trailDigits = trailDigits;
+    }
+    
+    public String getNumberFormatString() {
         return "X" + leadDigits + trailDigits + "Y" + leadDigits + trailDigits;
     }
     
-    public static String getTrailZeros() {
+    public String getTrailZeros() {
         return zeros[trailDigits];
     }
 
-    public static String formatNumber(String number) {
+    public String formatNumber(String number) {
         return number + getTrailZeros();
     }
     
-    public static String getHeader() {
+    public String getHeader() {
         String header = "" +
         "G04 PTK " + PTK.VERSION + "*\n" +
         "%TF.FileFunction,Copper,L1,Top,Signal*%\n" +
