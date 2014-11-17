@@ -20,16 +20,6 @@ public class Converter {
     private int linesCount              = 0;
     private int errorLinesCount         = 0;
 
-    private String gerberHeader =
-        "G04 PTK " + PTK.VERSION + "*\n" +
-        "%TF.FileFunction,Copper,L1,Top,Signal*%\n" +
-        "%MOMM*%\n" +
-        "%FSLA" + Gerber.getNumberFormatString() + "*%\n" +
-        "G75*\n" +
-        "G01*\n" +
-        "%LPD*%\n";
-    
-
     public Converter () {}
     
     public Converter(String csvFileName) {
@@ -87,7 +77,7 @@ public class Converter {
     public void writeGerber() throws IOException {
         File gerberFile = new File(csvFileName + ".gbr");
         FileWriter w = new FileWriter(gerberFile);
-        w.write(gerberHeader);
+        w.write(Gerber.getHeader());
         for (Polygon p: polygons)
             w.write(p.toGerber());
         w.write("M02*");
@@ -115,4 +105,34 @@ public class Converter {
         return count;
     }
 
+    
+    public boolean convertClassic() {
+        try {
+            BufferedReader r = new BufferedReader(new FileReader(csvFileName));
+            FileWriter w = new FileWriter(new File(csvFileName + ".gbr"));
+            linesCount = 0;
+            while (r.ready()) {
+                linesCount++;
+                String line = r.readLine();
+                if (lineHasErrors(line)) continue;
+                String[] data = line.split(delimeter, 4);
+                String result = "";
+                result += data[2].isEmpty() ? "" : "X" + Gerber.formatNumber(data[2]);
+                result += data[3].isEmpty() ? "" : "Y" + Gerber.formatNumber(data[3]);
+                if (!data[0].isEmpty()) {
+                    result = "G37*\nG36*\n" + result + "D02*\n";
+                } else {
+                    result += "D01*\n";
+                }
+                w.write(result);
+            }
+            r.close();
+            w.close();
+            return true;
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+    }
+    
 }

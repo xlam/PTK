@@ -33,4 +33,16 @@ public class Gerber {
     public static String formatNumber(String number) {
         return number + getTrailZeros();
     }
+    
+    public static String getHeader() {
+        String header = "" +
+        "G04 PTK " + PTK.VERSION + "*\n" +
+        "%TF.FileFunction,Copper,L1,Top,Signal*%\n" +
+        "%MOMM*%\n" +
+        "%FSLA" + getNumberFormatString() + "*%\n" +
+        "G75*\n" +
+        "G01*\n" +
+        "%LPD*%\n";
+        return header;
+    }
 }
