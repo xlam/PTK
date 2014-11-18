@@ -44,7 +44,7 @@ public class ConverterTest {
     }
     
     @Test
-    public void testCsvFileCorrectlyConverted() throws IOException {
+    public void testConverterCsvFileCorrectlyConverted() throws IOException {
         
         String[] expected = {
             "G36*",             // 0
@@ -68,7 +68,7 @@ public class ConverterTest {
             "Y5000D01*",        // 18
             "X25000D01*",       // 19
             "G37*",             // 20
-            "M02*",              // 21 (22 total)
+            "M02*",             // 21 (22 total)
         };
 
         Gerber gerber = Gerber.getInstance();
@@ -80,11 +80,13 @@ public class ConverterTest {
             String line = r.readLine();
             if (line.startsWith("%FS"))
                 assertEquals("%FSLAX43Y43*%", line);
-            if (line.equals("%LPD*%")) break; // конец заголовка
+            if (line.equals("%LPD*%"))
+                break; // конец заголовка
         }
         int linesCount = expected.length;
         for (int index = 0; index < linesCount; index++) {
-            if (!r.ready()) fail("Unexdected end of file (Expecting \"" + expected[index] + "\" at index " + index + ")");
+            if (!r.ready())
+                fail("Unexdected end of file (Expecting \"" + expected[index] + "\" at index " + index + ")");
             assertEquals(expected[index], r.readLine());
         }
     }
