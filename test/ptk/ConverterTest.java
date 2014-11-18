@@ -10,10 +10,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import org.junit.After;
-import org.junit.AfterClass;
 import static org.junit.Assert.*;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -25,14 +23,6 @@ public class ConverterTest {
     private Converter c;
     
     public ConverterTest() {
-    }
-    
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
     }
     
     @Before
@@ -57,27 +47,28 @@ public class ConverterTest {
     public void testCsvFileCorrectlyConverted() throws IOException {
         
         String[] expected = {
-            "G36*",
-            "X5000Y5000D02*",
-            "Y10000D01*",
-            "X10000D01*",
-            "Y5000D01*",
-            "X5000D01*",
-            "G37*",
-            "G36*",
-            "X15000Y5000D02*",
-            "Y10000D01*",
-            "X20000D01*",
-            "Y5000D01*",
-            "X15000D01*",
-            "G37*",
-            "G36*",
-            "X25000Y5000D02*",
-            "Y10000D01*",
-            "X30000D01*",
-            "Y5000D01*",
-            "X25000D01*",
-            "G37*",
+            "G36*",             // 0
+            "X5000Y5000D02*",   // 1
+            "Y10000D01*",       // 2
+            "X10000D01*",       // 3
+            "Y5000D01*",        // 4
+            "X5000D01*",        // 5
+            "G37*",             // 6
+            "G36*",             // 7
+            "X15000Y5000D02*",  // 8
+            "Y10000D01*",       // 9
+            "X20000D01*",       // 10
+            "Y5000D01*",        // 11
+            "X15000D01*",       // 12
+            "G37*",             // 13
+            "G36*",             // 14
+            "X25000Y5000D02*",  // 15
+            "Y10000D01*",       // 16
+            "X30000D01*",       // 17
+            "Y5000D01*",        // 18
+            "X25000D01*",       // 19
+            "G37*",             // 20
+            "M02*",              // 21 (22 total)
         };
 
         Gerber gerber = Gerber.getInstance();
@@ -91,9 +82,10 @@ public class ConverterTest {
                 assertEquals("%FSLAX43Y43*%", line);
             if (line.equals("%LPD*%")) break; // конец заголовка
         }
-        int index = 0;
-        while(r.ready())
-            assertEquals(expected[index++], r.readLine());
-        r.close();
+        int linesCount = expected.length;
+        for (int index = 0; index < linesCount; index++) {
+            if (!r.ready()) fail("Unexdected end of file (Expecting \"" + expected[index] + "\" at index " + index + ")");
+            assertEquals(expected[index], r.readLine());
+        }
     }
 }

@@ -30,7 +30,7 @@ public class Converter {
     }
     
     public void printStats() {
-        System.out.println("\nLines processed: " + linesCount);
+        System.out.println("Lines processed: " + linesCount);
         System.out.println("Polygons: " + polygonsCount);
         System.out.println("Error lines: " + errorLinesCount);
     }
@@ -72,12 +72,12 @@ public class Converter {
                     polygonsCount++;
                     result = "G36*\n" + result + "D02*\n";
                     if (polygonsCount > 1) result = "G37*\n" + result;
-                } else {
+                } else
                     result += "D01*\n";
-                }
                 w.write(result);
             }
             w.write("G37*\n");
+            w.write("M02*\n");
             r.close();
             w.close();
             return true;
