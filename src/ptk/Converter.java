@@ -12,19 +12,23 @@ import java.io.IOException;
  */
 public class Converter {
     
-    private String              csvFileName;
-    private String              delimeter = ";";
-    private int                 linesCount = 0;
-    private int                 errorLinesCount = 0;
-    private int                 polygonsCount = 0;
-    private Gerber              gerber = Gerber.getInstance();
+    private String csvFileName;
+    private String delimeter = ";";
+    private int    linesCount = 0;
+    private int    errorLinesCount = 0;
+    private int    polygonsCount = 0;
+    private Gerber gerber = Gerber.getInstance();
     
     public Converter () {}
     
     public Converter(String csvFileName) {
-        this.csvFileName = csvFileName;
+        setCsvFileName(csvFileName);
     }
 
+    public void setCsvFileName(String csvFileName) {
+        this.csvFileName = csvFileName;
+    }
+    
     public void printStats() {
         System.out.println("\nLines processed: " + linesCount);
         System.out.println("Polygons: " + polygonsCount);
@@ -33,7 +37,6 @@ public class Converter {
    
     public boolean lineHasErrors(String line) {
         if (3 != countDelimeters(line)) {
-            System.err.println("ERROR: Wrong format at line " + linesCount + ": \"" + line + "\"");
             errorLinesCount++;
             return true;
         }
@@ -57,7 +60,10 @@ public class Converter {
             while (r.ready()) {
                 linesCount++;
                 String line = r.readLine();
-                if (lineHasErrors(line)) continue;
+                if (lineHasErrors(line)) {
+                    System.err.println("ERROR: Skipping error line " + linesCount + ": \"" + line + "\"");
+                    continue;
+                };
                 String[] data = line.split(delimeter, 4);
                 String result = "";
                 result += data[2].isEmpty() ? "" : "X" + gerber.formatNumber(data[2]);

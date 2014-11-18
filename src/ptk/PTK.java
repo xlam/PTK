@@ -5,13 +5,11 @@
 
 package ptk;
 
-import java.io.IOException;
-
 public class PTK {
     
     public static final String VERSION = "0.4.0-dev";
     
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         if (args.length == 0) {
             System.out.println("Provide filename");
             System.exit(0);
