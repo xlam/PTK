@@ -90,4 +90,54 @@ public class ConverterTest {
             assertEquals(expected[index], r.readLine());
         }
     }
+    
+    @Test
+    public void testConverterCsvFileWithLayersCorrectlyConverted() throws IOException {
+        
+        String[] expected = {
+            "G36*",             // 0
+            "X5000Y2000D02*",   // 1
+            "Y15000D01*",       // 2
+            "X35000D01*",       // 3
+            "Y2000D01*",        // 4
+            "X5000D01*",        // 5
+            "G37*",             // 6
+            "%LPC*%",           // 7
+            "G36*",             // 8
+            "X15000Y5000D02*",  // 9
+            "Y10000D01*",       // 10
+            "X20000D01*",       // 11
+            "Y5000D01*",        // 12
+            "X15000D01*",       // 13
+            "G37*",             // 14
+            "G36*",             // 15
+            "X25000Y5000D02*",  // 16
+            "Y10000D01*",       // 17
+            "X30000D01*",       // 18
+            "Y5000D01*",        // 19
+            "X25000D01*",       // 20
+            "G37*",             // 21
+            "M02*",             // 22 (23 total)
+        };
+
+        Gerber gerber = Gerber.getInstance();
+        gerber.setNumberFormat(4, 3);
+        gerber.setIsLayersFile(true);
+        c.setCsvFileName("tableLayers.csv");
+        c.convert();
+        BufferedReader r = new BufferedReader(new FileReader("tableLayers.csv.gbr"));
+        while(r.ready()) {
+            String line = r.readLine();
+            if (line.startsWith("%FS"))
+                assertEquals("%FSLAX43Y43*%", line);
+            if (line.equals("%LPD*%"))
+                break; // конец заголовка
+        }
+        int linesCount = expected.length;
+        for (int index = 0; index < linesCount; index++) {
+            if (!r.ready())
+                fail("Unexdected end of file (Expecting \"" + expected[index] + "\" at index " + index + ")");
+            assertEquals(expected[index], r.readLine());
+        }
+    }
 }

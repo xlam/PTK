@@ -63,7 +63,7 @@ public class Converter {
                 if (lineHasErrors(line)) {
                     System.err.println("ERROR: Skipping error line " + linesCount + ": \"" + line + "\"");
                     continue;
-                };
+                }
                 String[] data = line.split(delimeter, 4);
                 String result = "";
                 result += data[2].isEmpty() ? "" : "X" + gerber.formatNumber(data[2]);
@@ -71,6 +71,7 @@ public class Converter {
                 if (!data[0].isEmpty()) {
                     polygonsCount++;
                     result = "G36*\n" + result + "D02*\n";
+                    if (polygonsCount == 2 && gerber.isLayersFile()) result = "%LPC*%\n" + result;
                     if (polygonsCount > 1) result = "G37*\n" + result;
                 } else
                     result += "D01*\n";
