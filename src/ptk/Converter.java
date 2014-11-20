@@ -22,10 +22,10 @@ public class Converter {
     public Converter () {}
     
     public Converter(String csvFileName) {
-        setCsvFileName(csvFileName);
+        setCsvFilename(csvFileName);
     }
 
-    public void setCsvFileName(String csvFileName) {
+    public void setCsvFilename(String csvFileName) {
         this.csvFileName = csvFileName;
     }
     
@@ -89,6 +89,12 @@ public class Converter {
         } else
             result += "D01*\n";
         return result;
+    }
+    
+    public String getGerberFilename() {
+        if (csvFileName.isEmpty())
+            return "";
+        return constructGerberFilename(csvFileName);
     }
     
     public String constructGerberFilename(String filename) {
