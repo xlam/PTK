@@ -44,6 +44,15 @@ public class ConverterTest {
     }
     
     @Test
+    public void testConverterGerberFileNameConstructed() {
+        assertEquals("filename.gbr", c.constructGerberFilename("filename.csv"));
+        assertEquals("filename.gbr", c.constructGerberFilename("filename.csvfile"));
+        assertEquals("file.gbr", c.constructGerberFilename("file.csv"));
+        assertEquals("f.csv.gbr", c.constructGerberFilename("f.csv.csv"));
+        assertEquals("file.gbr", c.constructGerberFilename("file"));
+    }
+    
+    @Test
     public void testConverterCsvFileCorrectlyConverted() throws IOException {
         
         String[] expected = {
@@ -73,9 +82,10 @@ public class ConverterTest {
 
         Gerber gerber = Gerber.getInstance();
         gerber.setNumberFormat(4, 3);
+        gerber.setIsLayersFile(false);
         c.setCsvFileName("table.csv");
         c.convert();
-        BufferedReader r = new BufferedReader(new FileReader("table.csv.gbr"));
+        BufferedReader r = new BufferedReader(new FileReader(c.constructGerberFilename("table.csv")));
         while(r.ready()) {
             String line = r.readLine();
             if (line.startsWith("%FS"))
@@ -125,13 +135,13 @@ public class ConverterTest {
         gerber.setIsLayersFile(true);
         c.setCsvFileName("tableLayers.csv");
         c.convert();
-        BufferedReader r = new BufferedReader(new FileReader("tableLayers.csv.gbr"));
+        BufferedReader r = new BufferedReader(new FileReader(c.constructGerberFilename("tableLayers.csv")));
         while(r.ready()) {
             String line = r.readLine();
             if (line.startsWith("%FS"))
                 assertEquals("%FSLAX43Y43*%", line);
             if (line.equals("%LPD*%"))
-                break; // конец заголовка
+                break; // end of header
         }
         int linesCount = expected.length;
         for (int index = 0; index < linesCount; index++) {

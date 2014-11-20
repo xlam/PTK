@@ -53,7 +53,7 @@ public class Converter {
     public boolean convert() {
         try {
             BufferedReader r = new BufferedReader(new FileReader(csvFileName));
-            FileWriter w = new FileWriter(new File(csvFileName + ".gbr"));
+            FileWriter w = new FileWriter(new File(constructGerberFilename(csvFileName)));
             linesCount = 0;
             polygonsCount = 0;
             w.write(gerber.getHeader());
@@ -89,5 +89,13 @@ public class Converter {
         } else
             result += "D01*\n";
         return result;
+    }
+    
+    public String constructGerberFilename(String filename) {
+        String ext = ".gbr";
+        int index = filename.lastIndexOf('.');
+        if (index < 0)
+            return filename + ext;
+        return filename.substring(0, index) + ext;
     }
 }

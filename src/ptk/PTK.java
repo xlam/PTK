@@ -22,7 +22,7 @@ public class PTK {
             System.out.println("Layers enabled.\n");
         }
         Converter c = new Converter(args[0]);
-        System.out.println("Converting [" + args[0] + "] -> [" + args[0] + ".gbr]...");
+        System.out.println("Converting [" + args[0] + "] -> [" + c.constructGerberFilename(args[0]) + "]...");
         c.convert();
         System.out.println("Converting finished.\n");
         c.printStats();
