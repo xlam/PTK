@@ -20,36 +20,40 @@ import org.junit.Test;
  */
 public class ConverterTest {
     
-    private Converter c;
+    private Converter converter;
+    
+    private Gerber gerber;
     
     public ConverterTest() {
     }
     
     @Before
     public void setUp() {
-        c = new Converter();
+        gerber = Gerber.getInstance();
+        gerber.setNumberFormat(4, 3);
+        converter = new Converter();
     }
     
     @After
     public void tearDown() {
-        c = null;
+        converter = null;
     }
     
     @Test
     public void testConverterDelimetersCounted() {
-        assertEquals(3, c.countDelimeters("А;1;25000;50000"));
-        assertEquals(2, c.countDelimeters("А;1;25000"));
-        assertEquals(1, c.countDelimeters(";"));
-        assertEquals(0, c.countDelimeters(""));
+        assertEquals(3, converter.countDelimeters("А;1;25000;50000"));
+        assertEquals(2, converter.countDelimeters("А;1;25000"));
+        assertEquals(1, converter.countDelimeters(";"));
+        assertEquals(0, converter.countDelimeters(""));
     }
     
     @Test
     public void testConverterGerberFileNameConstructed() {
-        assertEquals("filename.gbr", c.constructGerberFilename("filename.csv"));
-        assertEquals("filename.gbr", c.constructGerberFilename("filename.csvfile"));
-        assertEquals("file.gbr", c.constructGerberFilename("file.csv"));
-        assertEquals("f.csv.gbr", c.constructGerberFilename("f.csv.csv"));
-        assertEquals("file.gbr", c.constructGerberFilename("file"));
+        assertEquals("filename.gbr", converter.constructGerberFilename("filename.csv"));
+        assertEquals("filename.gbr", converter.constructGerberFilename("filename.csvfile"));
+        assertEquals("file.gbr", converter.constructGerberFilename("file.csv"));
+        assertEquals("f.csv.gbr", converter.constructGerberFilename("f.csv.csv"));
+        assertEquals("file.gbr", converter.constructGerberFilename("file"));
     }
     
     @Test
@@ -80,25 +84,10 @@ public class ConverterTest {
             "M02*",             // 21 (22 total)
         };
 
-        Gerber gerber = Gerber.getInstance();
-        gerber.setNumberFormat(4, 3);
-        gerber.setIsLayersFile(false);
-        c.setCsvFileName("table.csv");
-        c.convert();
-        BufferedReader r = new BufferedReader(new FileReader(c.constructGerberFilename("table.csv")));
-        while(r.ready()) {
-            String line = r.readLine();
-            if (line.startsWith("%FS"))
-                assertEquals("%FSLAX43Y43*%", line);
-            if (line.equals("%LPD*%"))
-                break; // конец заголовка
-        }
-        int linesCount = expected.length;
-        for (int index = 0; index < linesCount; index++) {
-            if (!r.ready())
-                fail("Unexdected end of file (Expecting \"" + expected[index] + "\" at index " + index + ")");
-            assertEquals(expected[index], r.readLine());
-        }
+        gerber.setIsLayersFile(false);  // file with no layers
+        converter.setCsvFilename("table.csv");
+        converter.convert();
+        assertTrue(verifyResult(converter.getGerberFilename(), expected));
     }
     
     @Test
@@ -130,12 +119,14 @@ public class ConverterTest {
             "M02*",             // 22 (23 total)
         };
 
-        Gerber gerber = Gerber.getInstance();
-        gerber.setNumberFormat(4, 3);
         gerber.setIsLayersFile(true);
-        c.setCsvFileName("tableLayers.csv");
-        c.convert();
-        BufferedReader r = new BufferedReader(new FileReader(c.constructGerberFilename("tableLayers.csv")));
+        converter.setCsvFilename("tableLayers.csv"); // file with layers
+        converter.convert();
+        assertTrue(verifyResult(converter.getGerberFilename(), expected));
+    }
+    
+    private boolean verifyResult(String filename, String[] expected) throws IOException {
+        BufferedReader r = new BufferedReader(new FileReader(filename));
         while(r.ready()) {
             String line = r.readLine();
             if (line.startsWith("%FS"))
@@ -149,5 +140,6 @@ public class ConverterTest {
                 fail("Unexdected end of file (Expecting \"" + expected[index] + "\" at index " + index + ")");
             assertEquals(expected[index], r.readLine());
         }
+        return true;
     }
 }
