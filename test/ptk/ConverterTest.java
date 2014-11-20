@@ -31,7 +31,7 @@ public class ConverterTest {
     public void setUp() {
         gerber = Gerber.getInstance();
         gerber.setNumberFormat(4, 3);
-        converter = new Converter();
+        converter = new Converter("notexistingfile");
     }
     
     @After

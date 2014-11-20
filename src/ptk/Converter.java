@@ -19,8 +19,6 @@ public class Converter {
     private int    polygonsCount = 0;
     private Gerber gerber = Gerber.getInstance();
     
-    public Converter () {}
-    
     public Converter(String csvFileName) {
         setCsvFilename(csvFileName);
     }
