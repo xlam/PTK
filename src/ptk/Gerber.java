@@ -16,6 +16,7 @@ public class Gerber {
     
     private int leadDigits  = 4;
     private int trailDigits = 4;
+    private boolean isLayersFile = false;
     
     private final String[] zeros = {"", "0", "00", "000", "0000", "00000", "000000", "0000000"};
     
@@ -34,6 +35,14 @@ public class Gerber {
     
     public String getNumberFormatString() {
         return "X" + leadDigits + trailDigits + "Y" + leadDigits + trailDigits;
+    }
+    
+    public boolean isLayersFile() {
+        return isLayersFile;
+    }
+
+    public void setIsLayersFile(boolean isLayersFile) {
+        this.isLayersFile = isLayersFile;
     }
     
     public String getTrailZeros() {

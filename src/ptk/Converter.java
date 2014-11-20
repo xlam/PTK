@@ -22,10 +22,10 @@ public class Converter {
     public Converter () {}
     
     public Converter(String csvFileName) {
-        setCsvFileName(csvFileName);
+        setCsvFilename(csvFileName);
     }
 
-    public void setCsvFileName(String csvFileName) {
+    public void setCsvFilename(String csvFileName) {
         this.csvFileName = csvFileName;
     }
     
@@ -53,28 +53,13 @@ public class Converter {
     public boolean convert() {
         try {
             BufferedReader r = new BufferedReader(new FileReader(csvFileName));
-            FileWriter w = new FileWriter(new File(csvFileName + ".gbr"));
+            FileWriter w = new FileWriter(new File(constructGerberFilename(csvFileName)));
             linesCount = 0;
             polygonsCount = 0;
             w.write(gerber.getHeader());
             while (r.ready()) {
                 linesCount++;
-                String line = r.readLine();
-                if (lineHasErrors(line)) {
-                    System.err.println("ERROR: Skipping error line " + linesCount + ": \"" + line + "\"");
-                    continue;
-                };
-                String[] data = line.split(delimeter, 4);
-                String result = "";
-                result += data[2].isEmpty() ? "" : "X" + gerber.formatNumber(data[2]);
-                result += data[3].isEmpty() ? "" : "Y" + gerber.formatNumber(data[3]);
-                if (!data[0].isEmpty()) {
-                    polygonsCount++;
-                    result = "G36*\n" + result + "D02*\n";
-                    if (polygonsCount > 1) result = "G37*\n" + result;
-                } else
-                    result += "D01*\n";
-                w.write(result);
+                w.write(constructGerberString(r.readLine()));
             }
             w.write("G37*\n");
             w.write("M02*\n");
@@ -87,4 +72,36 @@ public class Converter {
         }
     }
     
+    private String constructGerberString(String line) {
+        if (lineHasErrors(line)) {
+            System.err.println("ERROR: Skipping error line " + linesCount + ": \"" + line + "\"");
+            return "";
+        }
+        String[] data = line.split(delimeter, 4);
+        String result = "";
+        result += data[2].isEmpty() ? "" : "X" + gerber.formatNumber(data[2]);
+        result += data[3].isEmpty() ? "" : "Y" + gerber.formatNumber(data[3]);
+        if (!data[0].isEmpty()) {
+            polygonsCount++;
+            result = "G36*\n" + result + "D02*\n";
+            if (polygonsCount == 2 && gerber.isLayersFile()) result = "%LPC*%\n" + result;
+            if (polygonsCount > 1) result = "G37*\n" + result;
+        } else
+            result += "D01*\n";
+        return result;
+    }
+    
+    public String getGerberFilename() {
+        if (csvFileName.isEmpty())
+            return "";
+        return constructGerberFilename(csvFileName);
+    }
+    
+    public String constructGerberFilename(String filename) {
+        String ext = ".gbr";
+        int index = filename.lastIndexOf('.');
+        if (index < 0)
+            return filename + ext;
+        return filename.substring(0, index) + ext;
+    }
 }

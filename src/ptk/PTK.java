@@ -7,7 +7,7 @@ package ptk;
 
 public class PTK {
     
-    public static final String VERSION = "0.4.0";
+    public static final String VERSION = "0.4.1";
     
     public static void main(String[] args) {
         System.out.println("PTK v" + VERSION + ".\n");
@@ -17,8 +17,12 @@ public class PTK {
         }
         Gerber g = Gerber.getInstance();
         g.setNumberFormat(4, 3); // формат чисел - X43Y43. Все числа целые.
+        if (args.length > 1 && args[1].equals("-l")) {
+            g.setIsLayersFile(true);
+            System.out.println("Layers enabled.\n");
+        }
         Converter c = new Converter(args[0]);
-        System.out.println("Converting " + args[0] + "...");
+        System.out.println("Converting [" + args[0] + "] -> [" + c.constructGerberFilename(args[0]) + "]...");
         c.convert();
         System.out.println("Converting finished.\n");
         c.printStats();
