@@ -140,6 +140,7 @@ public class ConverterTest {
                 fail("Unexdected end of file (Expecting \"" + expected[index] + "\" at index " + index + ")");
             assertEquals(expected[index], r.readLine());
         }
+        r.close();
         return true;
     }
 }
