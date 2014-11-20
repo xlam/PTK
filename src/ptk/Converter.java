@@ -47,7 +47,6 @@ public class Converter {
         return count;
     }
 
-    
     public boolean convert() {
         try {
             BufferedReader r = new BufferedReader(new FileReader(csvFileName));
