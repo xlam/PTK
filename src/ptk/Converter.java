@@ -92,8 +92,10 @@ public class Converter {
     }
     
     public String getGerberFilename() {
-        if (csvFileName.isEmpty())
-            return "";
+        if (csvFileName.isEmpty()) {
+            System.out.println("ERROR: Input filename not set.");
+            System.exit(0);
+        }
         return constructGerberFilename(csvFileName);
     }
     
