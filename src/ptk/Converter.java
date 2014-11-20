@@ -58,8 +58,8 @@ public class Converter {
                 linesCount++;
                 w.write(constructGerberString(r.readLine()));
             }
-            w.write("G37*\n");
-            w.write("M02*\n");
+            w.write(Code.G37.nl());
+            w.write(Code.M02.nl());
             r.close();
             w.close();
             return true;
@@ -80,11 +80,11 @@ public class Converter {
         result += data[3].isEmpty() ? "" : "Y" + gerber.formatNumber(data[3]);
         if (!data[0].isEmpty()) {
             polygonsCount++;
-            result = "G36*\n" + result + "D02*\n";
-            if (polygonsCount == 2 && gerber.isLayersFile()) result = "%LPC*%\n" + result;
-            if (polygonsCount > 1) result = "G37*\n" + result;
+            result = Code.G36.nl() + result + Code.D02.nl();
+            if (polygonsCount == 2 && gerber.isLayersFile()) result = Code.LPC.nl() + result;
+            if (polygonsCount > 1) result = Code.G37.nl() + result;
         } else
-            result += "D01*\n";
+            result += Code.D01.nl();
         return result;
     }
     

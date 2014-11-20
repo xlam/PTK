@@ -61,7 +61,7 @@ public class Gerber {
         "%FSLA" + getNumberFormatString() + "*%\n" +
         "G75*\n" +
         "G01*\n" +
-        "%LPD*%\n";
+        Code.LPD.nl();
         return header;
     }
 }
