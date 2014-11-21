@@ -19,6 +19,7 @@ public class Gerber {
     private boolean isLayersFile = false;
     
     private final String[] zeros = {"", "0", "00", "000", "0000", "00000", "000000", "0000000"};
+    private final String EOH = "G04 END OF HEADER*";
     
     private Gerber() {}
     
@@ -26,6 +27,23 @@ public class Gerber {
         if (null == instance)
             instance = new Gerber();
         return instance;
+    }
+    
+    public String getHeader() {
+        String header = "" +
+        "G04 PTK " + PTK.VERSION + "*\n" +
+        "%TF.FileFunction,Copper,L1,Top,Signal*%\n" +
+        "%MOMM*%\n" +
+        "%FSLA" + getNumberFormatString() + "*%\n" +
+        Code.G75.nl() +
+        Code.G01.nl() +
+        Code.LPD.nl() +
+        getEndOfHeaderMarker() + "\n";
+        return header;
+    }
+    
+    public String getEndOfHeaderMarker() {
+        return EOH;
     }
     
     public void setNumberFormat(int leadDigits, int trailDigits) {
@@ -51,17 +69,5 @@ public class Gerber {
 
     public String formatNumber(String number) {
         return number + getTrailZeros();
-    }
-    
-    public String getHeader() {
-        String header = "" +
-        "G04 PTK " + PTK.VERSION + "*\n" +
-        "%TF.FileFunction,Copper,L1,Top,Signal*%\n" +
-        "%MOMM*%\n" +
-        "%FSLA" + getNumberFormatString() + "*%\n" +
-        "G75*\n" +
-        "G01*\n" +
-        "%LPD*%\n";
-        return header;
     }
 }

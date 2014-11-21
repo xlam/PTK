@@ -1,2 +1,8 @@
-workdir/table.gbr
-workdir/tableLayers.gbr
+# Netbeans
+/workdir/table.gbr
+/workdir/tableLayers.gbr
+/nbproject/
+/build.xml
+/manifest.mf
+/build/
+/newfile.txt

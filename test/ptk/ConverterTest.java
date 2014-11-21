@@ -31,7 +31,7 @@ public class ConverterTest {
     public void setUp() {
         gerber = Gerber.getInstance();
         gerber.setNumberFormat(4, 3);
-        converter = new Converter();
+        converter = new Converter("notexistingfile");
     }
     
     @After
@@ -131,8 +131,8 @@ public class ConverterTest {
             String line = r.readLine();
             if (line.startsWith("%FS"))
                 assertEquals("%FSLAX43Y43*%", line);
-            if (line.equals("%LPD*%"))
-                break; // end of header
+            if (line.equals(gerber.getEndOfHeaderMarker())) // end of header
+                break;
         }
         int linesCount = expected.length;
         for (int index = 0; index < linesCount; index++) {
@@ -140,6 +140,7 @@ public class ConverterTest {
                 fail("Unexdected end of file (Expecting \"" + expected[index] + "\" at index " + index + ")");
             assertEquals(expected[index], r.readLine());
         }
+        r.close();
         return true;
     }
 }
