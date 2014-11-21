@@ -97,7 +97,7 @@ public class Converter {
     }
     
     public String constructGerberFilename(String filename) {
-        String ext = ".gbr";
+        String ext = gerber.getFileExtention();
         int index = filename.lastIndexOf('.');
         if (index < 0)
             return filename + ext;
