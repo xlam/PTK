@@ -131,8 +131,8 @@ public class ConverterTest {
             String line = r.readLine();
             if (line.startsWith("%FS"))
                 assertEquals("%FSLAX43Y43*%", line);
-            if (line.equals("G04 END OF HEADER*"))
-                break; // end of header
+            if (line.equals(gerber.getEndOfHeaderMarker())) // end of header
+                break;
         }
         int linesCount = expected.length;
         for (int index = 0; index < linesCount; index++) {
