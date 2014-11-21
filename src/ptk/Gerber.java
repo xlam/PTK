@@ -35,8 +35,8 @@ public class Gerber {
         "%TF.FileFunction,Copper,L1,Top,Signal*%\n" +
         "%MOMM*%\n" +
         "%FSLA" + getNumberFormatString() + "*%\n" +
-        "G75*\n" +
-        "G01*\n" +
+        Code.G75.nl() +
+        Code.G01.nl() +
         Code.LPD.nl() +
         getEndOfHeaderMarker() + "\n";
         return header;
