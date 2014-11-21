@@ -131,7 +131,7 @@ public class ConverterTest {
             String line = r.readLine();
             if (line.startsWith("%FS"))
                 assertEquals("%FSLAX43Y43*%", line);
-            if (line.equals(Code.LPD.toString())) // TODO want just Code.LPD!
+            if (line.equals("G04 END OF HEADER*"))
                 break; // end of header
         }
         int linesCount = expected.length;
