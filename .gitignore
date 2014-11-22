@@ -5,3 +5,9 @@
 /build.xml
 /manifest.mf
 /build/
+
+# Eclipse
+/bin/
+/.settings/
+/.classpath
+/.project
