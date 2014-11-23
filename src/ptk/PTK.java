@@ -11,11 +11,10 @@ public class PTK {
     private static final String VERSION_MINOR = "4";
     private static final String VERSION_BUILD = "4";
     private static final String VERSION_STAGE = "dev"; // STAGE or something else would be correct?
-    
-    public static final String VERSION = getVersion();
+    private static final String VERSION = getVersion();
     
     public static void main(String[] args) {
-        System.out.println("PTK v" + VERSION + ".\n");
+        System.out.println("PTK v" + getVersion() + ".\n");
         // Need to add arguments handling stuff (later maybe...)
         if (args.length == 0) {
             System.out.println("Provide filename");
