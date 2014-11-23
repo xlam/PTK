@@ -7,7 +7,12 @@ package ptk;
 
 public class PTK {
     
-    public static final String VERSION = "0.4.4-dev";
+    private static final String VERSION_MAJOR = "0";
+    private static final String VERSION_MINOR = "4";
+    private static final String VERSION_BUILD = "4";
+    private static final String VERSION_STAGE = "dev"; // STAGE or something else would be correct?
+    
+    public static final String VERSION = getVersion();
     
     public static void main(String[] args) {
         System.out.println("PTK v" + VERSION + ".\n");
@@ -27,5 +32,9 @@ public class PTK {
         c.convert();
         System.out.println("Converting finished.\n");
         c.printStats();
+    }
+    
+    public static String getVersion() {
+        return VERSION_MAJOR + "." + VERSION_MINOR + "." + VERSION_BUILD + "-" + VERSION_STAGE;
     }
 }
