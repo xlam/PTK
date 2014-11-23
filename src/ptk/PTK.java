@@ -17,7 +17,7 @@ public class PTK {
             System.exit(0);
         }
         Gerber g = Gerber.getInstance();
-        g.setNumberFormat(4, 3); // формат чисел - X43Y43. Все числа целые.
+        g.setNumberFormat(4, 3); // формат чисел - X43Y43. Используем только целые значения.
         if (args.length > 1 && args[1].equals("-l")) {
             g.setIsLayersFile(true);
             System.out.println("Layers enabled.\n");
