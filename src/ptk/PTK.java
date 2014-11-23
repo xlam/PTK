@@ -1,5 +1,5 @@
 /**
- * Преобразователь таблиц координат (ПТК)
+ * Table of coordinates to Gerber converter.
  * @author Sergey
  */
 
@@ -16,7 +16,7 @@ public class PTK {
             System.exit(0);
         }
         Gerber g = Gerber.getInstance();
-        g.setNumberFormat(4, 3); // формат чисел - X43Y43. Все числа целые.
+        g.setNumberFormat(4, 3); // We use X43Y43 number format and only integer values.
         if (args.length > 1 && args[1].equals("-l")) {
             g.setIsLayersFile(true);
             System.out.println("Layers enabled.\n");
