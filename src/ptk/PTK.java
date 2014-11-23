@@ -16,7 +16,7 @@ public class PTK {
     
     public static void main(String[] args) {
         System.out.println("PTK v" + VERSION + ".\n");
-        // Need to add arguments handling stuff
+        // Need to add arguments handling stuff (later maybe...)
         if (args.length == 0) {
             System.out.println("Provide filename");
             System.exit(0);
