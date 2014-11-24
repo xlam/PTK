@@ -15,8 +15,8 @@ import org.junit.Test;
 public class ConverterTest {
     
     private Converter converter;
-    
     private Gerber gerber;
+    private final String workdir = "./workdir/";
     
     public ConverterTest() {
     }
@@ -79,7 +79,7 @@ public class ConverterTest {
         };
 
         gerber.setIsLayersFile(false);  // file with no layers
-        converter.setCsvFilename("table.csv");
+        converter.setCsvFilename(workdir + "table.csv");
         converter.convert();
         assertTrue(verifyResult(converter.getGerberFilename(), expected));
     }
@@ -114,7 +114,7 @@ public class ConverterTest {
         };
 
         gerber.setIsLayersFile(true);
-        converter.setCsvFilename("tableLayers.csv"); // file with layers
+        converter.setCsvFilename(workdir + "tableLayers.csv"); // file with layers
         converter.convert();
         assertTrue(verifyResult(converter.getGerberFilename(), expected));
     }
