@@ -6,6 +6,7 @@
 /build.xml
 /manifest.mf
 /build/
+/dist/
 
 # Eclipse
 /bin/
