@@ -26,7 +26,7 @@ public class Gerber {
     
     public String getHeader() {
         String header = "" +
-        "G04 PTK " + PTK.VERSION + "*\n" +  // Gerber should not know about PTK!
+        "G04 PTK " + PTK.getVersion() + "*\n" +  // Gerber should not know about PTK!
         "%TF.FileFunction,Copper,L1,Top,Signal*%\n" +
         "%MOMM*%\n" +
         "%FSLA" + getNumberFormatString() + "*%\n" +
