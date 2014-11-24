@@ -9,8 +9,8 @@ public class PTK {
     
     private static final String VERSION_MAJOR = "0";
     private static final String VERSION_MINOR = "4";
-    private static final String VERSION_BUILD = "4";
-    private static final String VERSION_STAGE = ""; // STAGE or something else would be correct?
+    private static final String VERSION_BUILD = "5";
+    private static final String VERSION_STAGE = "dev"; // STAGE or something else would be correct?
         
     public static void main(String[] args) {
         System.out.println("PTK v" + getVersion() + ".\n");
