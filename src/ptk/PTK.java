@@ -1,5 +1,5 @@
 /**
- * Преобразователь таблиц координат (ПТК)
+ * Table of coordinates to Gerber converter.
  * @author Sergey
  */
 
@@ -7,16 +7,21 @@ package ptk;
 
 public class PTK {
     
-    public static final String VERSION = "0.4.4-dev";
+    private static final String VERSION_MAJOR = "0";
+    private static final String VERSION_MINOR = "4";
+    private static final String VERSION_BUILD = "4";
+    private static final String VERSION_STAGE = "dev"; // STAGE or something else would be correct?
+    private static final String VERSION = getVersion();
     
     public static void main(String[] args) {
-        System.out.println("PTK v" + VERSION + ".\n");
+        System.out.println("PTK v" + getVersion() + ".\n");
+        // Need to add arguments handling stuff (later maybe...)
         if (args.length == 0) {
             System.out.println("Provide filename");
             System.exit(0);
         }
         Gerber g = Gerber.getInstance();
-        g.setNumberFormat(4, 3); // формат чисел - X43Y43. Все числа целые.
+        g.setNumberFormat(4, 3); // We use X43Y43 number format and only integer values.
         if (args.length > 1 && args[1].equals("-l")) {
             g.setIsLayersFile(true);
             System.out.println("Layers enabled.\n");
@@ -26,5 +31,9 @@ public class PTK {
         c.convert();
         System.out.println("Converting finished.\n");
         c.printStats();
+    }
+    
+    public static String getVersion() {
+        return VERSION_MAJOR + "." + VERSION_MINOR + "." + VERSION_BUILD + "-" + VERSION_STAGE;
     }
 }
