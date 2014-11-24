@@ -13,8 +13,8 @@ public class Gerber {
     private boolean isLayersFile = false;
     
     private final String fileExtention = ".gbr";
-    private final String[] zeros = {"", "0", "00", "000", "0000", "00000", "000000", "0000000"};
     private final String EOH = "G04 END OF HEADER*";
+    private final String[] zeros = {"", "0", "00", "000", "0000", "00000", "000000", "0000000"};
     
     private Gerber() {}
     
@@ -26,7 +26,7 @@ public class Gerber {
     
     public String getHeader() {
         String header = "" +
-        "G04 PTK " + PTK.VERSION + "*\n" +
+        "G04 PTK " + PTK.VERSION + "*\n" +  // Gerber should not know about PTK!
         "%TF.FileFunction,Copper,L1,Top,Signal*%\n" +
         "%MOMM*%\n" +
         "%FSLA" + getNumberFormatString() + "*%\n" +
