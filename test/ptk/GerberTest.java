@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
  */
 public class GerberTest {
     
-    private Gerber gerber = Gerber.getInstance();
+    private final Gerber gerber = Gerber.getInstance();
     
     public GerberTest() {
     }

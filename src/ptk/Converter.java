@@ -12,12 +12,12 @@ import java.io.IOException;
  */
 public class Converter {
     
+    private final Gerber gerber = Gerber.getInstance();
+    private final String delimeter = ";";
     private String csvFileName;
-    private String delimeter = ";";
     private int    linesCount = 0;
     private int    errorLinesCount = 0;
     private int    polygonsCount = 0;
-    private Gerber gerber = Gerber.getInstance();
     
     public Converter(String csvFileName) {
         setCsvFilename(csvFileName);
